@@ -1,22 +1,34 @@
 const { adduser, signInUser, userStory, userReport } = require("../services");
 const request = require("request");
-var bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 
 const createUser = async (req, res) => {
   try {
-    const user = await adduser(req.body);
-    if (!user.length > 1) {
-      return res.json({
-        message: "successfully created an account",
-        data: user,
-        status: "success",
-      });
-    }
-  } catch (error) {
-    res.json({
-      message: "user already exist",
-      status: "failed",
+    const { firstName, lastName, email, password } = req.body;
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    console.log(req.body, "===", hashedPassword);
+    const user = await adduser({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
     });
+    console.log(user);
+
+    res.json({
+      message: "successfully created an account",
+      data: user,
+      status: "success",
+    });
+  } catch (error) {
+    console.log(error.message);
+    res
+      .json({
+        message: "internal server error",
+        status: "failed",
+      })
+      .status(500);
   }
 };
 

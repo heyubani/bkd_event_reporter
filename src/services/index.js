@@ -3,9 +3,8 @@ const query = require("../../db/query");
 var bcrypt = require("bcryptjs");
 
 const adduser = (data) => {
-  var salt = bcrypt.genSaltSync(10);
-  var hashedPassword = bcrypt.hashSync(data.password, salt);
-  const payload = [data.firstName, data.lastName, data.email, hashedPassword];
+ 
+  const payload = [data.firstName, data.lastName, data.email, data.password];
   return db.any(query.addUser, payload);
 };
 

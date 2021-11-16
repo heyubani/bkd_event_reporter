@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-// const { getUser } = require("../middleware")
+const { signupValidator, getUser } = require("../middleware");
 const {
   createUser,
   signIn,
@@ -9,7 +9,7 @@ const {
 } = require("../controller");
 
 router.post("/incident", userIncident);
-router.post("/api/signup", createUser);
+router.post("/api/signup", signupValidator, getUser, createUser);
 router.post("/api/signin", signIn);
 router.get("api/report", fetchReport);
 
